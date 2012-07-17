@@ -14,11 +14,11 @@ $(function () {
 
 	$.jqplot.config.enablePlugins = true;
 
-	line1 = [["Java", 8.5], ["Web", 8.8], ["Python", 5.9], ["C", 3.4], ["C#", 2.7], ["Flex, AS3", 5.3]];
+	line1 = [["Java", 8.5], ["Web", 8.8], ["Python", 7.2], ["C", 4.0]];
 	plot3 = $.jqplot('languagesChart', [line1], {
 		seriesDefaults : {
 			renderer : $.jqplot.BarRenderer ,
-			label:'Afinidad con distintos lenguajes de programación'
+			label:'Mi afinidad con distintos lenguajes de programación'
 		},
 		height : 320,
 		width : 600,

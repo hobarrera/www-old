@@ -53,7 +53,7 @@ $(function () {
 
     $('#cv').click(function (event) {
         $.fancybox({
-            href : 'CV/',
+            href : 'http://curriculumdehugo.com.ar',
             width : '85%',
             height : '98%',
             type : 'iframe' 
