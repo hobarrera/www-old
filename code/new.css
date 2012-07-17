@@ -1,10 +1,7 @@
 body,html {
-	margin: 0;
 	height: 100%;
-	padding: 0;
-}
-
-body {
+	margin: 0px;
+	padding: 0px;
 	background-color: grey;
 }
 
@@ -17,6 +14,7 @@ body {
 	box-shadow: 10px 0px 5px #313131;
 	border-left: 1px solid #313131;
 	border-right: 1px solid #313131;
+	display:table
 }
 
 div.header {
@@ -69,7 +67,8 @@ ul {
 
 a {
 	text-decoration: none;
-	color: #0e73c6 /* Original: 1E93E6; */}
+	color: #0e73c6 /* Original: 1E93E6; */
+}
 
 a:hover {
 	text-decoration: underline;
