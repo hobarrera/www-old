@@ -1,0 +1,75 @@
+body,html {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	background-color: grey;
+}
+
+#container {
+	margin: 0 auto;
+	width: 800px;
+	background: white;
+	padding: 0 2em;
+	height: 100%;
+	box-shadow: 10px 0px 5px #313131;
+	border-left: 1px solid #313131;
+	border-right: 1px solid #313131;
+	display:table
+}
+
+div.header {
+	padding: 1px 1em;
+}
+
+h1 {
+	font-family: 'Actor', sans-serif;
+	font-size: 3em;
+	font-weight: normal;
+}
+
+h2 {
+	font-family: 'Actor', sans-serif;
+	margin-top: 0;
+	font-weight: normal;
+}
+
+#photo {
+	padding: 8px;
+	border: 1px solid gray;
+	vertical-align: middle;
+}
+
+p {
+	font-family: 'Open Sans', sans-serif;
+}
+
+table {
+	width: 100%;
+	border-spacing: 1em;
+}
+
+td {
+	padding: 0.7em 1em;
+	border: 1px solid gray;
+	width: 45%;
+	font-family: 'Open Sans', sans-serif;
+	vertical-align: top;
+}
+
+ul {
+	padding-left: 0.8em;
+}
+
+.footnote {
+	font-size: 0.7em;
+	font-style: italic;
+}
+
+a {
+	text-decoration: none;
+	color: #0e73c6 /* Original: 1E93E6; */
+}
+
+a:hover {
+	text-decoration: underline;
+}
