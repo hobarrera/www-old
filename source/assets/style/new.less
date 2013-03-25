@@ -1,4 +1,6 @@
-body,html {
+@border-color: #313131;
+
+body, html {
 	height: 100%;
 	margin: 0px;
 	padding: 0px;
@@ -11,9 +13,9 @@ body,html {
 	background: white;
 	padding: 0 2em;
 	height: 100%;
-	box-shadow: 10px 0px 5px #313131;
-	border-left: 1px solid #313131;
-	border-right: 1px solid #313131;
+	box-shadow: 10px 0px 5px @border-color;
+	border-left: 1px solid @border-color;
+	border-right: 1px solid @border-color;
 	display:table
 }
 
@@ -21,16 +23,17 @@ div.header {
 	padding: 1px 1em;
 }
 
-h1 {
+h1, h2 {
 	font-family: 'Actor', sans-serif;
-	font-size: 3em;
 	font-weight: normal;
 }
 
+h1 {
+	font-size: 3em;
+}
+
 h2 {
-	font-family: 'Actor', sans-serif;
 	margin-top: 0;
-	font-weight: normal;
 }
 
 #photo {
