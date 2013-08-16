@@ -28,28 +28,30 @@ class SettingsLoader:
         settings_file.close()
         return settings
 
-class FileProcessor:
+def process_html(source_file, target_file):
+    env = Environment(loader=FileSystemLoader(os.path.dirname(source_file)))
+    template = env.get_template(os.path.basename(source_file))
+    rendered_file = open(target_file, "w")
+    rendered_file.write(template.render())
+    rendered_file.close()
 
-    @staticmethod
-    def process_file(source_file, target_file):
-        cwd = os.path.dirname(source_file)
-        os.chdir(cwd)
+def process_less(source_file, target_file):
+    target_file = target_file.replace(".less", ".css")
+    # TODO: use python-less instead of invocating lessc
+    os.system("lessc -x {source} {destination}".format(source=source_file, destination=target_file))
 
-        if relfilepath.endswith(".less"):
-            target_file = target_file.replace(".less", ".css")
-            # TODO: use python-less instead of invocating lessc
-            os.system("lessc -x {source} {destination}".format(source=absfilepath, destination=target_file))
-        elif relfilepath.endswith(".html"):
-            env = Environment(loader=FileSystemLoader(cwd))
-            template = env.get_template(os.path.basename(source_file))
-            rendered_file = open(target_file, "w")
-            rendered_file.write(template.render())
-            rendered_file.close()
-        elif relfilepath.endswith(".tex"):
-            pass
+def process_file(source_file, target_file):
+    if source_file.endswith(".less"):
+        process_less(source_file, target_file)
+    elif source_file.endswith(".jinja.html"):
+        pass # Ignore jinja templaes
+    elif source_file.endswith(".html"):
+        process_html(source_file, target_file)
+    elif source_file.endswith(".tex"):
+        pass
         # TODO: process TEX files, converting them into PDFs
-        else:
-            shutil.copy(absfilepath, target_file)
+    else:
+        shutil.copy(source_file, os.path.dirname(target_file))
 
 if __name__ == '__main__':
     # TODO: accept all settings as arguments
@@ -64,35 +66,34 @@ if __name__ == '__main__':
     build_path = settings["build_path"]
     ignore = settings["ignore"]
 
+    # Clean and recreate the target directory
     if os.path.exists(build_path):
         shutil.rmtree(build_path)
     os.mkdir(build_path)
 
-    for (dirpath, dirnames, filenames) in os.walk(source_path):
-        reldirpath = dirpath.replace(source_path, "")
+    if arguments["publish"] or arguments["build"]:
+        for (dirpath, dirnames, filenames) in os.walk(source_path):
+            # Path relative to source_path
+            reldirpath = dirpath.replace(source_path, "")
 
-        # Ignore all children if this directory is to be ignored:
-        if reldirpath in ignore:
-            del dirnames[:]
-            del filenames[:]
-            continue
-
-        absdirpath = os.path.join(build_path, reldirpath)
-        if not os.path.exists(absdirpath):
-            os.mkdir(absdirpath)
-
-        # TODO: pull git submodules (which might bring in stuff like cv.tex)
-
-        for filename in filenames:
-            relfilepath = os.path.join(reldirpath, filename)
-            absfilepath = os.path.join(source_path, relfilepath)
-
-            if relfilepath in ignore:
+            # Ignore all children if this directory is to be ignored:
+            if reldirpath in ignore:
+                del dirnames[:]
+                del filenames[:]
                 continue
 
-            target = os.path.join(build_path, relfilepath)
+            abs_target_path = os.path.join(build_path, reldirpath)
+            if not os.path.exists(abs_target_path):
+                os.mkdir(abs_target_path)
 
-            FileProcessor().process_file(absfilepath, target)
+            # TODO: pull git submodules (which might bring in stuff like cv.tex)
+
+            for filename in filenames:
+                rel_filename = os.path.join(reldirpath, filename)
+                target = os.path.join(build_path, rel_filename)
+
+                if rel_filename not in ignore:
+                    process_file(os.path.join(source_path, rel_filename), target)
 
     if arguments["publish"]:
         # TODO: search for a pure python rsync lib

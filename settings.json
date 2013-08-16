@@ -1,6 +1,6 @@
 {
 	"ignore": [".settings", "cv/html"],
-	"source_path": "/home/hugo/workspace/www/source/",
-	"build_path": "/home/hugo/workspace/www/build/",
+	"source_path": "source/",
+	"build_path": "build/",
 	"target_path": "root@elysion.ubertech.com.ar:/var/www/https/ar.com.hugoosvaldobarrera/"
 }
