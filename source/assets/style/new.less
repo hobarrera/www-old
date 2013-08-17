@@ -25,8 +25,22 @@ body, html {
 	display:table
 }
 
-div.header {
-	padding: 1px 1em;
+p.short-text {
+	max-width:37.5em;
+}
+
+header {
+	padding: 2em 1em;
+	clear: both;
+	margin-bottom: 9em;
+}
+
+header img {
+	margin-right: 1em;
+	float:left; /* right looks good too*/
+	vertical-align: middle;
+	margin-bottom: -3em;
+
 }
 
 h1, h2 {
@@ -36,6 +50,8 @@ h1, h2 {
 
 h1 {
 	font-size: 3em;
+	margin-top: 1em;
+	float: left;
 }
 
 h2 {
@@ -48,7 +64,7 @@ h2 {
 	vertical-align: middle;
 }
 
-p {
+p, div {
 	font-family: 'Open Sans', sans-serif;
 }
 
@@ -57,12 +73,14 @@ table {
 	border-spacing: 1em;
 }
 
-td {
-	padding: 0.7em 1em;
+div.box {
+	padding: 0.7em 1em 0 1em;
 	border: 1px solid gray;
-	width: 45%;
+	max-width: 21em;
+	float:left;
 	font-family: 'Open Sans', sans-serif;
 	vertical-align: top;
+	margin: 0 0 1em 1em;
 }
 
 ul {
@@ -81,4 +99,8 @@ a {
 
 a:hover {
 	text-decoration: underline;
+}
+
+.group {
+	clear: both;
 }

@@ -1,8 +1,9 @@
-<!-- <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet'> -->
+<!DOCTYPE html>
+
 <html>
 <head>
 
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta name="referrer" content="always">
 
 <title>Hugo Osvaldo Barrera</title>
@@ -12,17 +13,58 @@
 <!-- <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet'> -->
 <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
 
-<link href="assets/style/new.css" rel='stylesheet'/>
-<link href='assets/typicons/font/typicons.css' rel='stylesheet'/>
+<link href="assets/style/new.css" rel='stylesheet'>
+<link href='assets/typicons/font/typicons.css' rel='stylesheet'>
+
+<script src="assets/scripts/jquery-2.0.3.min.js"></script>
+<script>
+function adjustBoxes() {
+    // destyle / restyle boxes
+    if ($("div.box").length > 0) {
+        if ($("div.box:first").position().top !=
+            $("div.box:last").position().top) {
+            $("div.box").removeClass("box");
+            $("div.boxxy").css("width", "auto");
+            $("div.boxxy").css("height", "auto");
+        }
+    } else if (containerWidth = $(window).width() / parseFloat($("body").css("font-size")) >= 50) {
+        $("div.boxxy").addClass("box");
+    }
+
+    // Make all the boxes the same size
+    group = $("div.box");
+    if (group.length > 0) {
+        var height = 0;
+        var width = 0;
+        group.each(function() {
+            var currentHeight = $(this).height();
+            if(currentHeight > height) {
+                height = currentHeight;
+            }
+            var currentWidth = $(this).width();
+            if(currentWidth > width) {
+                width = currentWidth;
+            }
+        });
+        group.height(height);
+        group.width(width);
+    }
+}
+
+$(document).ready(function() {
+    adjustBoxes();
+});
+$(window).resize(function() {
+    adjustBoxes();
+});
+</script>
 </head>
 <body>
     <div id="container">
-        <div class="header">
-            <h1>
-                <img id="photo" src="assets/img/me_128.png" alt="Photo of me" /> Hugo
-                Osvaldo Barrera
-            </h1>
-        </div>
+        <header>
+            <img id="photo" src="assets/img/me_128.png" alt="Photo of me">
+            <h1>Hugo Osvaldo Barrera</h1>
+        </header>
 
         <h2>About me</h2>
         <p>
@@ -34,38 +76,34 @@
         <p>
             I sometimes get weird looks since I use <a href="http://www.mutt.org/">Mutt</a> for email, but I've found it to be faster and easier than any web-based or X-based email client around.  It also has the added advantage that I always have a full copy of all my email locally.  I do have an issue with managing contacts though, since I can't find anything that's not broken in some way.  I use <a href="https://pidgin.im/">Pidgin</a> (with <a href="http://xmpp.org">XMPP</a>) exclusively for chat.
 
-        <table>
-            <tr>
-                <td>
-                    <h2>Contact me</h2>
-                    <span class="typcn typcn-social-at-circular">
-                        Email: <a href="mailto:hugo@osvaldobarrera.com.ar">hugo@osvaldobarrera.com.ar</a>
-                    </span><br>
-                    <span class="typcn typcn-message">
-                        XMPP: <a href="xmpp:hugo@osvaldobarrera.com.ar">hugo@osvaldobarrera.com.ar</a>
-                    </span><br>
-                    <span class="typcn typcn-lock-closed-outline">
-                        GPG Key: <a href="hugoosvaldobarrera.asc">0x1BFBED44</a>
-                    </span>
+        <div class="box boxxy">
+        <h2>Contact me</h2>
+            <span class="typcn typcn-social-at-circular">
+                Email: <a href="mailto:hugo@osvaldobarrera.com.ar">hugo@osvaldobarrera.com.ar</a>
+            </span><br>
+            <span class="typcn typcn-message">
+                XMPP: <a href="xmpp:hugo@osvaldobarrera.com.ar">hugo@osvaldobarrera.com.ar</a>
+            </span><br>
+            <span class="typcn typcn-lock-closed-outline">
+                GPG Key: <a href="hugoosvaldobarrera.asc">0x1BFBED44</a>
+            </span>
 
-                    <p>If you want to get in touch, e-mail or XMPP (aka "Jabber", aka "Google Talk") are my prefered means of communication.
-                    <p>If you need to send me private emails, use my GPG public key to encrypt them.
+            <p>If you want to get in touch, e-mail or XMPP (aka "Jabber", aka "Google Talk") are my prefered means of communication.
+            <p>If you need to send me private emails, use my GPG public key to encrypt them.
+        </div>
+        <div class="box boxxy">
+            <h2>Some links</h2>
+            <ul>
+                <li><a href="cv/cv.pdf">My CV</a></li>
+                <li><a href="https://github.com/hobarrera">My github page</a></li>
+            </ul>
+        </div>
 
-                    </td>
-                <td>
-                    <h2>Some links</h2>
-                    <ul>
-                        <li><a href="cv/cv.pdf">My CV</a></li>
-                        <li><a href="https://github.com/hobarrera">My github page</a></li>
-                        <li>...?</li>
-                    </ul>
-                </td>
-            </tr>
-        </table>
-
+        <div class="group"></div>
         <div class="footnote">This website has been tested on firefox, w3m, chromium, opera mini and a few other browsers.</div>
-        <div style="clear: both;"></div>
+        <div class="group"></div>
     </div>
 
 </body>
 </html>
+
