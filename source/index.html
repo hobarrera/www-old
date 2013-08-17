@@ -19,35 +19,19 @@
 <script src="assets/scripts/jquery-2.0.3.min.js"></script>
 <script>
 function adjustBoxes() {
-    // destyle / restyle boxes
-    if ($("div.box").length > 0) {
-        if ($("div.box:first").position().top !=
-            $("div.box:last").position().top) {
-            $("div.box").removeClass("box");
-            $("div.boxxy").css("width", "auto");
-            $("div.boxxy").css("height", "auto");
-        }
-    } else if (containerWidth = $(window).width() / parseFloat($("body").css("font-size")) >= 50) {
-        $("div.boxxy").addClass("box");
-    }
+    group = $("div.box");
+    group.css("height", "auto");
 
     // Make all the boxes the same size
-    group = $("div.box");
-    if (group.length > 0) {
+    if ($("#container").width() / parseFloat($("body").css("font-size")) >= 49.5) {
         var height = 0;
-        var width = 0;
         group.each(function() {
             var currentHeight = $(this).height();
             if(currentHeight > height) {
                 height = currentHeight;
             }
-            var currentWidth = $(this).width();
-            if(currentWidth > width) {
-                width = currentWidth;
-            }
         });
         group.height(height);
-        group.width(width);
     }
 }
 
@@ -76,7 +60,7 @@ $(window).resize(function() {
         <p>
             I sometimes get weird looks since I use <a href="http://www.mutt.org/">Mutt</a> for email, but I've found it to be faster and easier than any web-based or X-based email client around.  It also has the added advantage that I always have a full copy of all my email locally.  I do have an issue with managing contacts though, since I can't find anything that's not broken in some way.  I use <a href="https://pidgin.im/">Pidgin</a> (with <a href="http://xmpp.org">XMPP</a>) exclusively for chat.
 
-        <div class="box boxxy">
+        <div class="box">
         <h2>Contact me</h2>
             <span class="typcn typcn-social-at-circular">
                 Email: <a href="mailto:hugo@osvaldobarrera.com.ar">hugo@osvaldobarrera.com.ar</a>
@@ -91,7 +75,7 @@ $(window).resize(function() {
             <p>If you want to get in touch, e-mail or XMPP (aka "Jabber", aka "Google Talk") are my prefered means of communication.
             <p>If you need to send me private emails, use my GPG public key to encrypt them.
         </div>
-        <div class="box boxxy">
+        <div class="box">
             <h2>Some links</h2>
             <ul>
                 <li><a href="cv/cv.pdf">My CV</a></li>
