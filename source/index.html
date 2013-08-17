@@ -22,8 +22,8 @@ function adjustBoxes() {
     group = $("div.box");
     group.css("height", "auto");
 
-    // Make all the boxes the same size
-    if ($("#container").width() / parseFloat($("body").css("font-size")) >= 49.5) {
+    // If they're floating boxes, make them the same height
+    if ($("div.box:first").css('float') == "left") {
         var height = 0;
         group.each(function() {
             var currentHeight = $(this).height();
