@@ -4,6 +4,7 @@ import os
 import sys
 import shutil
 import json
+import jsmin
 from docopt import docopt
 from jinja2 import Environment, FileSystemLoader
 
@@ -40,18 +41,27 @@ def process_less(source_file, target_file):
     # TODO: use python-less instead of invocating lessc
     os.system("lessc -x {source} {destination}".format(source=source_file, destination=target_file))
 
+def process_js(source_file, target_file):
+    in_file = open(source_file, "r")
+    out_file = open(target_file, "w")
+
+    out_file.write(jsmin.jsmin(in_file.read()))
+
+    in_file.close()
+    out_file.close()
+
 def process_file(source_file, target_file):
-    if source_file.endswith(".less"):
-        process_less(source_file, target_file)
-    elif source_file.endswith(".jinja.html"):
-        pass # Ignore jinja templaes
-    elif source_file.endswith(".html"):
-        process_html(source_file, target_file)
-    elif source_file.endswith(".tex"):
-        pass
-        # TODO: process TEX files, converting them into PDFs
-    else:
-        shutil.copy(source_file, os.path.dirname(target_file))
+    if source_file.endswith(".jinja.html"):
+        return
+
+    ext = os.path.splitext(source_file)[1]
+    if len(ext) >= 2:
+        fun = "process_{}".format(ext[1:])
+        if fun in globals():
+            globals()[fun](source_file, target_file)
+            return
+
+    shutil.copy(source_file, os.path.dirname(target_file))
 
 if __name__ == '__main__':
     # TODO: accept all settings as arguments
