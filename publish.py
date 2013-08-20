@@ -4,7 +4,6 @@ import os
 import sys
 import shutil
 import json
-import jsmin
 from docopt import docopt
 from jinja2 import Environment, FileSystemLoader
 
@@ -42,13 +41,12 @@ def process_less(source_file, target_file):
     os.system("lessc -x {source} {destination}".format(source=source_file, destination=target_file))
 
 def process_js(source_file, target_file):
-    in_file = open(source_file, "r")
-    out_file = open(target_file, "w")
+    # Make java shut up about _JAVA_OPTIONS being set (usually, for font
+    # antialiasing)
+    os.unsetenv("_JAVA_OPTIONS")
+    os.system('sh -c "closure {} --js_output_file {} --warning_level QUIET"'
+              .format(source_file, target_file))
 
-    out_file.write(jsmin.jsmin(in_file.read()))
-
-    in_file.close()
-    out_file.close()
 
 def process_file(source_file, target_file):
     if source_file.endswith(".jinja.html"):
