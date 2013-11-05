@@ -17,6 +17,12 @@ Usage:
 
 Options:
   --settings=<FILE>    Use a different settings file.
+
+Files staring underscore or period are ignored.
+LESS files are compiled to CSS.
+HTML files are trated as jinja2-templated files. Ordinary HTML files won't be
+affected.
+JavaScript files will be compressed.
 """
 
 class SettingsLoader:
@@ -41,17 +47,9 @@ def process_less(source_file, target_file):
     os.system("lessc -x {source} {destination}".format(source=source_file, destination=target_file))
 
 def process_js(source_file, target_file):
-    # Make java shut up about _JAVA_OPTIONS being set (usually, for font
-    # antialiasing)
-    os.unsetenv("_JAVA_OPTIONS")
-    os.system('sh -c "closure {} --js_output_file {} --warning_level QUIET"'
-              .format(source_file, target_file))
-
+    os.system('sh -c "jsmin < {} > {}"'.format(source_file, target_file))
 
 def process_file(source_file, target_file):
-    if source_file.endswith(".jinja.html"):
-        return
-
     ext = os.path.splitext(source_file)[1]
     if len(ext) >= 2:
         fun = "process_{}".format(ext[1:])
@@ -97,6 +95,8 @@ if __name__ == '__main__':
             # TODO: pull git submodules (which might bring in stuff like cv.tex)
 
             for filename in filenames:
+                if filename.startswith("_") or filename.startswith("."):
+                    continue
                 rel_filename = os.path.join(reldirpath, filename)
                 target = os.path.join(build_path, rel_filename)
 
