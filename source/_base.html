@@ -16,6 +16,8 @@
 <link href="/assets/style/new.css" rel='stylesheet'>
 <link href='/assets/typicons/font/typicons.css' rel='stylesheet'>
 
+<script src="/assets/scripts/jquery-2.0.3.js"></script>
+<script src="/assets/scripts/common.js"></script>
 {% block scripts %}{% endblock %}
 </head>
 <body>
@@ -23,10 +25,20 @@
         <header>
             <img id="photo" src="/assets/img/me_128.png" alt="Photo of me">
             <h1>Hugo Osvaldo Barrera</h1>
+            <nav>
+                <ul>
+                    <li><a href="/">About me</a></li>
+                    <li><a href="https://github.com/hobarrera">Code</a></li>
+                    <li><a href="/recipes">Recipes</a></li>
+                </ul>
+            </nav>
             <div class="group"></div>
         </header>
 {% block content %} {% endblock %}
+        <div class="group"></div>
         <footer>This website has been tested on firefox, w3m, chromium, opera mini and a few other browsers.</footer>
+        <!-- Hack that adds a sort of "min-width" that has less precedence than "max-width" -->
+        <div class="width-hack">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</div>
     </div>
 
 </body>
