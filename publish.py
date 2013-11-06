@@ -12,6 +12,7 @@ usage = """Publish.py
 Usage:
   publish.py publish [--settings=<FILE>]
   publish.py build [--settings=<FILE>]
+  publish.py serve [--settings=<FILE>]
   publish.py -h | --help
   publish.py --version
 
@@ -77,7 +78,7 @@ if __name__ == '__main__':
         shutil.rmtree(build_path)
     os.mkdir(build_path)
 
-    if arguments["publish"] or arguments["build"]:
+    if arguments["publish"] or arguments["build"] or arguments["serve"]:
         for (dirpath, dirnames, filenames) in os.walk(source_path):
             # Path relative to source_path
             reldirpath = dirpath.replace(source_path, "")
@@ -108,3 +109,6 @@ if __name__ == '__main__':
         rsync_command = "rsync -rtzchlC --delete-after {build_path} {target_path}"
         rsync_command = rsync_command.format(build_path=build_path, target_path=settings["target_path"])
         os.system(rsync_command)
+
+    if arguments["serve"]:
+        os.system("darkhttpd build/")
