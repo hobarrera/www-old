@@ -35,30 +35,59 @@ class SettingsLoader:
         settings_file.close()
         return settings
 
-def process_html(source_file, target_file):
-    env = Environment(loader=FileSystemLoader(os.path.dirname(source_file)))
-    template = env.get_template(os.path.basename(source_file))
-    rendered_file = open(target_file, "w")
+
+class Context:
+
+    source_root=None
+    target_root=None
+
+    ignore_list=None
+
+    source_file=None
+
+    def __init__(self, source_root, target_root, ignore_list):
+        self.source_root = source_root
+        self.target_root = target_root
+        self.ignore_list = ignore_list
+
+    @property
+    def target_path(self):
+        return os.path.join(self.target_root, self.source_file)
+
+    @property
+    def source_path(self):
+        return os.path.join(self.source_root, self.source_file)
+
+
+###########################
+### FILE PROCESSING METHODS
+
+def process_html(context):
+    env = Environment(loader=FileSystemLoader(context.source_root))
+    template = env.get_template(context.source_file)
+    rendered_file = open(context.target_path, "w")
     rendered_file.write(template.render())
     rendered_file.close()
 
-def process_less(source_file, target_file):
-    target_file = target_file.replace(".less", ".css")
+def process_less(context):
+    target_file = context.target_path.replace(".less", ".css")
     # TODO: use python-less instead of invocating lessc
-    os.system("lessc -x {source} {destination}".format(source=source_file, destination=target_file))
+    os.system("lessc -x {source} {destination}".format(source=context.source_path, destination=target_file))
 
-def process_js(source_file, target_file):
-    os.system('sh -c "jsmin < {} > {}"'.format(source_file, target_file))
+def process_js(context):
+    os.system('sh -c "jsmin < {} > {}"'.format(context.source_path, context.target_path))
 
-def process_file(source_file, target_file):
-    ext = os.path.splitext(source_file)[1]
+def process_file(context):
+    ext = os.path.splitext(context.source_path)[1]
     if len(ext) >= 2:
         fun = "process_{}".format(ext[1:])
         if fun in globals():
-            globals()[fun](source_file, target_file)
+            globals()[fun](context)
             return
 
-    shutil.copy(source_file, os.path.dirname(target_file))
+    shutil.copy(context.source_path, context.target_path)
+
+###########################
 
 if __name__ == '__main__':
     # TODO: accept all settings as arguments
@@ -73,15 +102,17 @@ if __name__ == '__main__':
     build_path = settings["build_path"]
     ignore = settings["ignore"]
 
+    context = Context(source_path, build_path, ignore)
+
     # Clean and recreate the target directory
-    if os.path.exists(build_path):
-        shutil.rmtree(build_path)
-    os.mkdir(build_path)
+    if os.path.exists(context.target_root):
+        shutil.rmtree(context.target_root)
+    os.mkdir(context.target_root)
 
     if arguments["publish"] or arguments["build"] or arguments["serve"]:
-        for (dirpath, dirnames, filenames) in os.walk(source_path):
-            # Path relative to source_path
-            reldirpath = dirpath.replace(source_path, "")
+        for (dirpath, dirnames, filenames) in os.walk(context.source_root):
+            # Path relative to context.source_root
+            reldirpath = dirpath.replace(context.source_root, "")
 
             # Ignore all children if this directory is to be ignored:
             if reldirpath in ignore:
@@ -89,7 +120,7 @@ if __name__ == '__main__':
                 del filenames[:]
                 continue
 
-            abs_target_path = os.path.join(build_path, reldirpath)
+            abs_target_path = os.path.join(context.target_root, reldirpath)
             if not os.path.exists(abs_target_path):
                 os.mkdir(abs_target_path)
 
@@ -99,10 +130,11 @@ if __name__ == '__main__':
                 if filename.startswith("_") or filename.startswith("."):
                     continue
                 rel_filename = os.path.join(reldirpath, filename)
-                target = os.path.join(build_path, rel_filename)
+                target = os.path.join(context.target_root, rel_filename)
 
                 if rel_filename not in ignore:
-                    process_file(os.path.join(source_path, rel_filename), target)
+                    context.source_file = rel_filename
+                    process_file(context)
 
     if arguments["publish"]:
         # TODO: search for a pure python rsync lib
