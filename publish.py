@@ -4,20 +4,26 @@ import os
 import sys
 import shutil
 import json
+import re
+
 from docopt import docopt
 from jinja2 import Environment, FileSystemLoader
 
 usage = """Publish.py
 
 Usage:
-  publish.py publish [--settings=<FILE>]
-  publish.py build [--settings=<FILE>]
-  publish.py serve [--settings=<FILE>]
+  publish.py publish [options]
+  publish.py build [options]
+  publish.py serve [options]
   publish.py -h | --help
   publish.py --version
 
 Options:
   --settings=<FILE>    Use a different settings file.
+  --source_path=<PATH> Path for
+  --build_path=<PATH>  Location where build objects will be placed
+  --target_path=<PATH> Remote path for deployment
+
 
 Files staring underscore or period are ignored.
 LESS files are compiled to CSS.
@@ -26,24 +32,29 @@ affected.
 JavaScript files will be compressed.
 """
 
+
 class SettingsLoader:
 
     @staticmethod
-    def load(settings_filename="settings.json"):
+    def load(cli_settings=None, settings_filename="settings.json"):
         settings_file = open(settings_filename)
         settings = json.load(settings_file)
+        for key in settings:
+            settings_key = "--" + key
+            if settings_key in cli_settings and cli_settings[settings_key]:
+                settings[key] = cli_settings["--" + key]
         settings_file.close()
         return settings
 
 
 class Context:
 
-    source_root=None
-    target_root=None
+    source_root = None
+    target_root = None
 
-    ignore_list=None
+    ignore_list = None
 
-    source_file=None
+    source_file = None
 
     def __init__(self, source_root, target_root, ignore_list):
         self.source_root = source_root
@@ -58,9 +69,28 @@ class Context:
     def source_path(self):
         return os.path.join(self.source_root, self.source_file)
 
+    def __repr__(self):
+        return "<Context source_root: " + repr(self.source_root) + \
+            "target_root: " + repr(self.target_root) + "ignore_list: " + \
+            repr(self.ignore_list) + ">"
+
+
+class ProcessorHandler:
+
+    processors = {}
+
+    def register_processor(self, pattern, processor):
+        self.processors[re.compile(pattern)] = processor
+
+    def process_file(self, context):
+        for k, v in self.processors.iteritems():
+            if k.match(context.source_file):
+                v(context)
+                return
 
 ###########################
 ### FILE PROCESSING METHODS
+
 
 def process_html(context):
     env = Environment(loader=FileSystemLoader(context.source_root))
@@ -69,40 +99,42 @@ def process_html(context):
     rendered_file.write(template.render())
     rendered_file.close()
 
+
 def process_less(context):
     target_file = context.target_path.replace(".less", ".css")
     # TODO: use python-less instead of invocating lessc
-    os.system("lessc -x {source} {destination}".format(source=context.source_path, destination=target_file))
+    os.system("lessc -x {source} {destination}".
+              format(source=context.source_path, destination=target_file))
+
 
 def process_js(context):
-    os.system('sh -c "jsmin < {} > {}"'.format(context.source_path, context.target_path))
+    os.system('sh -c "jsmin < {} > {}"'.format(context.source_path,
+              context.target_path))
+
 
 def process_file(context):
-    ext = os.path.splitext(context.source_path)[1]
-    if len(ext) >= 2:
-        fun = "process_{}".format(ext[1:])
-        if fun in globals():
-            globals()[fun](context)
-            return
-
     shutil.copy(context.source_path, context.target_path)
 
 ###########################
+
 
 if __name__ == '__main__':
     # TODO: accept all settings as arguments
     arguments = docopt(usage, version='Publish.py 0.1')
 
     if arguments["--settings"]:
-        settings = SettingsLoader().load(arguments["--settings"])
+        settings = SettingsLoader().load(arguments, arguments["--settings"])
     else:
-        settings = SettingsLoader().load()
+        settings = SettingsLoader().load(arguments)
 
-    source_path = settings["source_path"]
-    build_path = settings["build_path"]
-    ignore = settings["ignore"]
+    context = Context(settings["source_path"], settings["build_path"],
+                      settings["ignore"])
 
-    context = Context(source_path, build_path, ignore)
+    processor_handler = ProcessorHandler()
+    processor_handler.register_processor(".*\.html", process_html)
+    processor_handler.register_processor(".*\.less", process_less)
+    processor_handler.register_processor(".*\.js", process_js)
+    processor_handler.register_processor(".*", process_file)
 
     # Clean and recreate the target directory
     if os.path.exists(context.target_root):
@@ -115,7 +147,7 @@ if __name__ == '__main__':
             reldirpath = dirpath.replace(context.source_root, "")
 
             # Ignore all children if this directory is to be ignored:
-            if reldirpath in ignore:
+            if reldirpath in context.ignore_list:
                 del dirnames[:]
                 del filenames[:]
                 continue
@@ -124,22 +156,25 @@ if __name__ == '__main__':
             if not os.path.exists(abs_target_path):
                 os.mkdir(abs_target_path)
 
-            # TODO: pull git submodules (which might bring in stuff like cv.tex)
+            # TODO: pull git submodules (which might bring in stuff like *.tex)
 
             for filename in filenames:
-                if filename.startswith("_") or filename.startswith("."):
+                if filename.startswith("_") or filename.startswith(".") or \
+                   context.ignore_list:
                     continue
                 rel_filename = os.path.join(reldirpath, filename)
                 target = os.path.join(context.target_root, rel_filename)
 
-                if rel_filename not in ignore:
+                if rel_filename not in context.ignore_list:
                     context.source_file = rel_filename
-                    process_file(context)
+                    processor_handler.process_file(context)
 
     if arguments["publish"]:
         # TODO: search for a pure python rsync lib
-        rsync_command = "rsync -rtzchlC --delete-after {build_path} {target_path}"
-        rsync_command = rsync_command.format(build_path=build_path, target_path=settings["target_path"])
+        rsync_command = "rsync -rtzchlC --delete-after {} " +
+        "{}"
+        rsync_command = rsync_command.format(context.target_root,
+                                             settings["remote_path"])
         os.system(rsync_command)
 
     if arguments["serve"]:
