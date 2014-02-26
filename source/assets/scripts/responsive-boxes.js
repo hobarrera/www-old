@@ -5,9 +5,9 @@ function adjustBoxes() {
     // If they're floating boxes, make them the same height
     if ($("div.box:first").css('float') == "left") {
         var height = 0;
-        group.each(function() {
+        group.each(function () {
             var currentHeight = $(this).height();
-            if(currentHeight > height) {
+            if (currentHeight > height) {
                 height = currentHeight;
             }
         });
@@ -15,9 +15,9 @@ function adjustBoxes() {
     }
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     adjustBoxes();
 });
-$(window).resize(function() {
+$(window).resize(function () {
     adjustBoxes();
 });
