@@ -13,25 +13,26 @@ body, html {
 }
 
 #container {
-  margin: 0 auto;
+  margin: 0em auto;
   max-width:50em;
   min-width: 28em;
   background: white;
   padding: 0 2em;
-  height: 100%;
   box-shadow: 0px 0px 6px @border-color;
   border-left: 1px solid @border-color;
   border-right: 1px solid @border-color;
-  height: 100%;
+  min-height: 100%;
 }
 
 .width-hack {
   word-break: break-all;
   color: white;
   speak: none;
+  opacity: 0;
 }
 
 header {
+  padding-top: 2.5em;
   margin-bottom: 2em;
   img {
     margin: -1em 1em 0 1em;
@@ -46,7 +47,7 @@ h1, h2 {
 
 h1 {
   font-size: 3em;
-  margin-top: 1em;
+  margin-top: 0;
   margin-bottom: 0.5em;
 }
 
