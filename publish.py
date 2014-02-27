@@ -75,17 +75,24 @@ class Context:
             repr(self.ignore_list) + ">"
 
 
+class Processor:
+
+    def __init__(self, pattern, function):
+        self.pattern = re.compile(pattern)
+        self.function = function
+
+
 class ProcessorHandler:
 
-    processors = {}
+    processors = []
 
-    def register_processor(self, pattern, processor):
-        self.processors[re.compile(pattern)] = processor
+    def register_processor(self, processor):
+        self.processors.append(processor)
 
     def process_file(self, context):
-        for k, v in self.processors.iteritems():
-            if k.match(context.source_file):
-                v(context)
+        for processor in self.processors:
+            if processor.pattern.match(context.source_file):
+                processor.function(context)
                 return
 
 ###########################
@@ -103,8 +110,9 @@ def process_html(context):
 def process_less(context):
     target_file = context.target_path.replace(".less", ".css")
     # TODO: use python-less instead of invocating lessc
-    os.system("lessc -x {source} {destination}".
-              format(source=context.source_path, destination=target_file))
+    command = "lessc -x {source} {destination}". \
+              format(source=context.source_path, destination=target_file)
+    os.system(command)
 
 
 def process_js(context):
@@ -131,10 +139,10 @@ if __name__ == '__main__':
                       settings["ignore"])
 
     processor_handler = ProcessorHandler()
-    processor_handler.register_processor(".*\.html", process_html)
-    processor_handler.register_processor(".*\.less", process_less)
-    processor_handler.register_processor(".*\.js", process_js)
-    processor_handler.register_processor(".*", process_file)
+    processor_handler.register_processor(Processor(".*\.html", process_html))
+    processor_handler.register_processor(Processor(".*\.less", process_less))
+    processor_handler.register_processor(Processor(".*\.js", process_js))
+    processor_handler.register_processor(Processor(".*", process_file))
 
     # Clean and recreate the target directory
     if os.path.exists(context.target_root):
@@ -160,7 +168,7 @@ if __name__ == '__main__':
 
             for filename in filenames:
                 if filename.startswith("_") or filename.startswith(".") or \
-                   context.ignore_list:
+                   filename in context.ignore_list:
                     continue
                 rel_filename = os.path.join(reldirpath, filename)
                 target = os.path.join(context.target_root, rel_filename)
@@ -171,8 +179,7 @@ if __name__ == '__main__':
 
     if arguments["publish"]:
         # TODO: search for a pure python rsync lib
-        rsync_command = "rsync -rtzchlC --delete-after {} " +
-        "{}"
+        rsync_command = "rsync -rtzchlC --delete-after {} {}"
         rsync_command = rsync_command.format(context.target_root,
                                              settings["remote_path"])
         os.system(rsync_command)
