@@ -1,7 +1,7 @@
 My Website
 ==========
 
-This repository contains my personal website, https://hugoosvaldobarrera.com.ar.
+This repository contains my personal website, https://hugo.barrera.io/.
 
 There's a small publication script included (which is still WIP), which pre-processes some file types before publishing.
 Hopefully, someone will find some use for this (rather simple) script.
