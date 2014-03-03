@@ -1,0 +1,34 @@
+{
+  "name": "icons",
+  "css_prefix_text": "icon-",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "2cb15eb2b295ee3c33fab1530e18a924",
+      "css": "btc",
+      "code": 59395,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "3e1bb74572a30486bd647304d9fcaff6",
+      "css": "gpg",
+      "code": 59394,
+      "src": "typicons"
+    },
+    {
+      "uid": "b90868gfogj970a1g0dnot6hm5r4uj55",
+      "css": "im",
+      "code": 59393,
+      "src": "typicons"
+    },
+    {
+      "uid": "aa5bd6860d8921412a6e25946991410b",
+      "css": "at",
+      "code": 59392,
+      "src": "typicons"
+    }
+  ]
+}
