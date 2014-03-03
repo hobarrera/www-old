@@ -2,5 +2,5 @@
 	"ignore": [".settings", "cv/html", ".project"],
 	"source_path": "source/",
 	"build_path": "build/",
-	"remote_path": "root@elysion.barrera.io:/var/www/https/ar.com.hugoosvaldobarrera/"
+	"remote_path": "root@elysion.barrera.io:/var/www/https/hugo.barrera.io"
 }
