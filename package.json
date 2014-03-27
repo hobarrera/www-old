@@ -1,0 +1,30 @@
+{
+  "name": "FocusFreak",
+  "version": "1.0.0",
+  "description": "FocusFreak website and application.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.barrera.io:focusfreak"
+  },
+  "keywords": [
+    "focusfreak"
+  ],
+  "author": "Hugo Osvaldo Barrera <hugo@barrera.io>",
+  "license": "Propietary",
+  "dependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-jshint": "^0.9.2",
+    "grunt-contrib-less": "^0.11.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-htmlmin": "^0.2.0",
+    "grunt-http-server": "0.0.4",
+    "grunt-rsync": "^0.5.0",
+    "grunt-jinja": "^0.3.0"
+  }
+}
