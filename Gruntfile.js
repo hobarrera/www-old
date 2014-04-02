@@ -87,7 +87,7 @@
         showDir: false,
         autoIndex: true,
         defaultExt: 'html',
-        runInBackground: false
+        runInBackground: true
       }
     },
     jinja: {
@@ -118,5 +118,5 @@
   grunt.registerTask('test', ['jshint']);
   grunt.registerTask('default', defaultTasks);
   grunt.registerTask('deploy', defaultTasks.concat(['rsync']));
-  grunt.registerTask('serve', defaultTasks.concat(['http-server']));
+  grunt.registerTask('serve', ['http-server', 'watch']);
 };
