@@ -1,5 +1,5 @@
   module.exports = function(grunt) {
-  defaultTasks = ['clean', 'jshint', 'less', 'copy', 'jinja']; // 'htmlmin'
+  defaultTasks = ['clean', 'jshint', 'less', 'copy', 'jinja', 'markdown']; // 'htmlmin'
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -102,6 +102,30 @@
           src: ['**/!(_)*.html']
         }]
       }
+    },
+    markdown: {
+      all: {
+        files: [
+          {
+            expand: true,
+            dest: 'build',
+            cwd: 'src/',
+            src: '**/*.md',
+            ext: '.html'
+          }
+        ]
+      },
+      options: {
+        template: 'build/base_md.html',
+        markdownOptions: {
+          gfm: true,
+          highlight: "auto",
+          codeLines: {
+            before: '<span>',
+            after: '</span>'
+          }
+        }
+      }
     }
   });
 
@@ -114,6 +138,7 @@
   grunt.loadNpmTasks("grunt-rsync");
   grunt.loadNpmTasks("grunt-http-server");
   grunt.loadNpmTasks("grunt-jinja");
+  grunt.loadNpmTasks('grunt-markdown');
 
   grunt.registerTask('test', ['jshint']);
   grunt.registerTask('default', defaultTasks);

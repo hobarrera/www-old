@@ -24,7 +24,7 @@ body, html {
   border-left: 1px solid @border-color;
   border-right: 1px solid @border-color;
   min-height: 100%;
-  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 h1, h2, h3 {
@@ -98,18 +98,28 @@ article {
     line-height: 1.4em;
   }
 
-  h2 {
+  h1 {
     font-weight: normal;
     font-size: 27px;
     margin-top: 0;
   }
 
-  img {
+  h2 {
+    font-size: 19px;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  > img, figure {
     width: 108%;
     max-width: 1280px;
     text-align: center;
     margin-left: -4%;
     margin-top: 1em;
+  }
+
+  figure img {
+    width: 100%
   }
 
   a:hover {
