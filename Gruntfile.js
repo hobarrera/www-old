@@ -1,5 +1,6 @@
   module.exports = function(grunt) {
-  defaultTasks = ['clean', 'jshint', 'less', 'copy', 'jinja', 'markdown']; // 'htmlmin'
+  defaultTasks = ['clean', 'jshint', 'less', 'copy', 'jinja:templates',
+    'jinja:md', 'markdown', 'jinja:pages']; // 'htmlmin'
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -91,14 +92,36 @@
       }
     },
     jinja: {
-      default : {
+      templates : {
         options: {
-          templateDirs: ['src']
+          templateDirs: ['src'],
+        },
+        files: {
+          'tmp/base_md.html': 'src/base_md.html'
+        }
+      },
+      md : {
+        options: {
+          templateDirs: ['src'],
+          contextRoot: 'src/'
+        },
+        files: [{
+          expand: true,
+          dest: 'tmp/',
+          cwd: 'src/',
+          src: ['**/!(_)*.md']
+        }]
+      },
+      pages : {
+        options: {
+          // tmp takes precedence, since that has some preprocessed files
+          templateDirs: ['tmp', 'src'],
+          contextRoot: 'src/'
         },
         files: [{
           expand: true,
           dest: 'build/',
-          cwd: 'src/',
+          cwd: 'tmp/',
           src: ['**/!(_)*.html']
         }]
       }
@@ -108,15 +131,16 @@
         files: [
           {
             expand: true,
-            dest: 'build',
-            cwd: 'src/',
+            // Move to tmp since we can do jinja templating for variables there
+            dest: 'tmp',
+            cwd: 'tmp/',
             src: '**/*.md',
             ext: '.html'
           }
         ]
       },
       options: {
-        template: 'build/base_md.html',
+        template: 'tmp/base_md.html',
         markdownOptions: {
           gfm: true,
           highlight: "auto",
