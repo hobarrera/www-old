@@ -1,8 +1,4 @@
 
-{% block styles %}
-<link href="/assets/styles/icons.css" rel='stylesheet'>
-{% endblock %}
-
 {% block content %}
 
 About me
