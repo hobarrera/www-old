@@ -17,7 +17,7 @@ files.forEach(function (file) {
 
   var recipe = {};
   recipe.title = words.join(' ');
-  recipe.href = file.replace(".md", ".html");
+  recipe.href = file.replace(".md", "");
 
   recipes.push(recipe);
 });
