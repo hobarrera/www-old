@@ -1,6 +1,6 @@
   module.exports = function(grunt) {
-  defaultTasks = ['clean', 'jshint', 'less', 'copy', 'jinja:templates',
-    'jinja:md', 'markdown', 'jinja:pages']; // 'htmlmin'
+  defaultTasks = ['clean', 'jshint', 'less', 'copy', 'jinja:md', 'markdown',
+    'jinja:pages']; // 'htmlmin'
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -35,7 +35,7 @@
       files: {
         expand: true,
         cwd: 'src/',
-        src: ['**', '!**/*.less', '!**/*.html'],
+        src: ['**', '!**/*.less', '!**/*.html', '!**/*.md'],
         dest: 'build/',
         //ignores: ['**/*.js', '**/*.css'],
         mode: 0644,
@@ -51,7 +51,7 @@
         },
       },
     },
-    clean: ['build'],
+    clean: ['build', 'tmp'],
     // htmlmin: {
     //   options: {
     //     removeComments: true,
@@ -92,14 +92,6 @@
       }
     },
     jinja: {
-      templates : {
-        options: {
-          templateDirs: ['src'],
-        },
-        files: {
-          'tmp/base_md.html': 'src/base_md.html'
-        }
-      },
       md : {
         options: {
           templateDirs: ['src'],
@@ -122,7 +114,14 @@
           expand: true,
           dest: 'build/',
           cwd: 'tmp/',
-          src: ['**/!(_)*.html']
+          src: ['**/!(_)*.html'],
+          rename: function (dest, src, opts) {
+            if (src.split("/").pop() == "index.html")
+              return dest + src;
+            var arr = src.split(".");
+            arr.pop();
+            return dest + arr.join("") + "/index.html";
+          }
         }]
       }
     },
@@ -140,7 +139,7 @@
         ]
       },
       options: {
-        template: 'tmp/base_md.html',
+        template: 'src/_base.html',
         markdownOptions: {
           gfm: true,
           highlight: "auto",
