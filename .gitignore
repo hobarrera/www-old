@@ -1,3 +1,4 @@
 /source/cv/cv.pdf
 /build/*
 /node_modules
+/tmp/*
