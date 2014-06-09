@@ -1,5 +1,6 @@
 @border-color: #313131;
 @article-width: 720px;
+@text-color: #423F37;
 
 body, html {
   height: 100%;
@@ -9,7 +10,7 @@ body, html {
   background: linear-gradient(to bottom, #898989 0%,#808080 100%);
   background-repeat: no-repeat;
   background-attachment: fixed;
-  color: #423F37;
+  color: @text-color;
   /*font-size: 1.05em;*/
 }
 
@@ -63,7 +64,7 @@ header#master {
   }
 
   span {
-    color: #949494;
+    font-weight: 300;
     padding-left: 3px;
   }
 
@@ -98,6 +99,10 @@ article {
     line-height: 1.4em;
   }
 
+  li {
+    margin-left: 0.4em;
+  }
+
   h1 {
     font-weight: normal;
     font-size: 27px;
@@ -124,6 +129,12 @@ article {
 
   a:hover {
     text-decoration: underline;
+  }
+
+  hr {
+    border-top: 0;
+    border-bottom: 1px solid @text-color;
+    width: 50%;
   }
 }
 
