@@ -10,7 +10,7 @@ Ingredients
  * 2 cups of sugar
  * 0.75 cups of unsweetened cocoa
  * 1 spoon salt
- * 1 spoon baking poder
+ * 1 spoon baking powder
  * 1 cup water
  * 1 cup vegetable oil
  * 1 spoon vanilla escence
