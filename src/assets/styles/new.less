@@ -79,10 +79,16 @@ header#master {
       padding: 0 1em 0 0;
     }
 
-    a:hover {
-      text-decoration: none;
-      color: #25649F;
-      border-bottom: 1px dotted;
+    a {
+      transition: all 1.4s ease 0s;
+      border-bottom:  transparent 1px dotted;
+
+      &:hover {
+        text-decoration: none;
+        color: #25649F;
+        border-bottom: #25649F 1px dotted;
+        transition: all 0.3s ease 0s;
+      }
     }
   }
 }
@@ -132,10 +138,14 @@ article {
     }
   }
 
+  a {
+    transition: all 1s ease 0s;
+    border-bottom:  transparent 1px solid;
 
-
-  a:hover {
-    text-decoration: underline;
+    &:hover {
+      transition: all 0.3s ease 0s;
+      border-bottom:  #0E73C6 1px solid;
+    }
   }
 
   hr {
